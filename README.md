@@ -10,6 +10,8 @@ AWS accounts have hundreds of configurable settings across storage, identity, ne
 
 CloudGuard solves this by scanning an AWS account for common security misconfigurations across five core services. Each finding is mapped to a specific NIST 800-53 compliance control, assigned a severity level based on potential impact, and presented in a visual dashboard with clear remediation guidance. The result is a single view of an account's security posture with actionable steps to fix every issue found.
 
+![CloudGuard Dashboard — Risk Score, Severity Breakdown, Service Distribution, and NIST 800-53 Compliance](screenshots/dashboard-overview.png)
+
 ## How Security Scanning Works
 
 CloudGuard follows a straightforward scanning pipeline:
@@ -26,6 +28,8 @@ CloudGuard follows a straightforward scanning pipeline:
 ## Security Checks by Service
 
 CloudGuard performs 22 distinct security checks across five AWS services.
+
+![Security Findings Table — 14 checks across IAM, EC2, and CloudTrail with severity badges, pass/fail status, and NIST control mapping](screenshots/findings-table.png)
 
 ### S3 (Storage)
 
@@ -363,11 +367,7 @@ uvicorn main:app --reload
 
 **Note:** CloudGuard only requires read-only access. It never modifies any AWS resources.
 
----
-
-## Screenshots
-
-Screenshots will be added after deployment.
+![CloudGuard connected to a live AWS account for real-time security scanning](screenshots/aws-console.png)
 
 ---
 

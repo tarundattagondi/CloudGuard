@@ -8,24 +8,38 @@ const COLORS = {
   LOW: '#22c55e',
 };
 
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const { name, value } = payload[0].payload;
+  return (
+    <div className="bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2 shadow-xl">
+      <p className="text-xs text-slate-400">{name}</p>
+      <p className="text-sm font-bold" style={{ color: COLORS[name] }}>{value} findings</p>
+    </div>
+  );
+};
+
 const SeverityChart = ({ data }) => {
-  const chartData = Object.entries(data || {}).map(([name, value]) => ({ name, value }));
   const order = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
-  chartData.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+  const chartData = order.map(name => ({ name, value: data?.[name] || 0 }));
 
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-slate-300 mb-4">Findings by Severity</h3>
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={chartData} barSize={40}>
-          <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} allowDecimals={false} />
-          <Tooltip
-            contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: 8, color: '#e2e8f0' }}
+    <div className="bg-[#1e293b] rounded-2xl p-6 border border-slate-700/50">
+      <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">By Severity</h3>
+      <ResponsiveContainer width="100%" height={210}>
+        <BarChart data={chartData} barSize={36}>
+          <XAxis
+            dataKey="name" axisLine={false} tickLine={false}
+            tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }}
           />
-          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+          <YAxis
+            axisLine={false} tickLine={false} allowDecimals={false}
+            tick={{ fill: '#475569', fontSize: 11 }} width={24}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(148,163,184,0.05)' }} />
+          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
             {chartData.map((entry) => (
-              <Cell key={entry.name} fill={COLORS[entry.name] || '#64748b'} />
+              <Cell key={entry.name} fill={COLORS[entry.name]} />
             ))}
           </Bar>
         </BarChart>

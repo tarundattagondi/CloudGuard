@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Shield, RefreshCw, AlertTriangle, Activity, AlertOctagon, AlertCircle, Info } from 'lucide-react';
+import { Shield, RefreshCw, AlertTriangle, Activity, AlertOctagon, AlertCircle, Info, Github } from 'lucide-react';
 import { fetchSummary, fetchScanAll } from '../api/client';
 import RiskScore from './RiskScore';
 import SeverityChart from './SeverityChart';
@@ -8,16 +8,16 @@ import NistCompliance from './NistCompliance';
 import FindingsTable from './FindingsTable';
 
 const StatCard = ({ label, value, icon: Icon, color, subtext }) => (
-  <div className="bg-[#1e293b] rounded-xl p-5 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 group">
+  <div className="bg-[#1e293b] rounded-xl p-4 sm:p-5 border border-slate-700/50 hover:border-slate-600/50 transition-all duration-300">
     <div className="flex items-start justify-between">
       <div>
-        <p className="text-sm text-slate-400 mb-1">{label}</p>
-        <p className="text-3xl font-bold tracking-tight" style={{ color }}>{value}</p>
-        {subtext && <p className="text-xs text-slate-500 mt-1">{subtext}</p>}
+        <p className="text-xs sm:text-sm text-slate-400 mb-1">{label}</p>
+        <p className="text-2xl sm:text-3xl font-bold tracking-tight" style={{ color }}>{value}</p>
+        {subtext && <p className="text-[10px] sm:text-xs text-slate-500 mt-1 hidden sm:block">{subtext}</p>}
       </div>
-      <div className="p-2 rounded-lg transition-colors duration-300"
+      <div className="p-1.5 sm:p-2 rounded-lg"
         style={{ backgroundColor: color + '15' }}>
-        <Icon size={20} style={{ color }} />
+        <Icon size={18} style={{ color }} />
       </div>
     </div>
   </div>
@@ -100,37 +100,38 @@ const Dashboard = () => {
     <div className="min-h-screen bg-[#0f172a]">
       {/* Header */}
       <header className="border-b border-slate-800/80 bg-[#0f172a]/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="p-2 bg-blue-600/10 rounded-lg">
               <Shield className="text-blue-500" size={24} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-white tracking-tight">CloudGuard</h1>
-                <span className="text-[10px] bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">
+                <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">CloudGuard</h1>
+                <span className="text-[10px] bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded-full font-medium uppercase tracking-wider hidden sm:inline">
                   Demo
                 </span>
               </div>
-              <p className="text-xs text-slate-500">AWS Security Scanner</p>
+              <p className="text-[11px] sm:text-xs text-slate-500">AWS Security Misconfiguration Scanner</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {lastScan && (
-              <span className="text-xs text-slate-500 hidden sm:block">
+              <span className="text-xs text-slate-500 hidden md:block">
                 Last scan: {lastScan.toLocaleTimeString()}
               </span>
             )}
             <button onClick={() => loadData(true)} disabled={scanning}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 transition-all text-sm font-medium">
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 transition-all text-xs sm:text-sm font-medium">
               <RefreshCw size={14} className={scanning ? 'animate-spin' : ''} />
-              {scanning ? 'Scanning...' : 'Scan Now'}
+              <span className="hidden sm:inline">{scanning ? 'Scanning...' : 'Scan Now'}</span>
+              <span className="sm:hidden">{scanning ? '...' : 'Scan'}</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Scanning overlay */}
         {scanning && (
           <div className="fixed inset-0 bg-[#0f172a]/60 backdrop-blur-sm z-40 flex items-center justify-center">
@@ -175,7 +176,7 @@ const Dashboard = () => {
         </div>
 
         {/* Risk Score + Charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <RiskScore score={summary?.overall_risk_score || 0} />
           <SeverityChart data={summary?.findings_by_severity} />
           <ServiceBreakdown data={summary?.findings_by_service} />
@@ -188,10 +189,28 @@ const Dashboard = () => {
         <FindingsTable findings={findings} />
 
         {/* Footer */}
-        <footer className="text-center py-4 border-t border-slate-800/50">
-          <p className="text-xs text-slate-600">
-            CloudGuard Security Scanner &middot; NIST 800-53 Compliance Mapping &middot; Demo Mode
-          </p>
+        <footer className="border-t border-slate-800/50 pt-6 pb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Shield size={14} className="text-slate-600" />
+              <p className="text-xs text-slate-500">
+                CloudGuard &middot; AWS Security Misconfiguration Scanner &middot; NIST 800-53 Compliance
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="text-xs text-slate-500">
+                Built by <span className="text-slate-400 font-medium">Tarun Datta Gondi</span>
+              </p>
+              <a
+                href="https://github.com/tarundattagondi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-500 hover:text-slate-300 transition-colors"
+              >
+                <Github size={16} />
+              </a>
+            </div>
+          </div>
         </footer>
       </main>
     </div>
